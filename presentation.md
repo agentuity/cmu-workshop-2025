@@ -237,7 +237,7 @@ agentuity deploy
 Building Projects That Win
 ---
 
-# **Pattern 1: Pick a wedge, not a world**
+# **Pattern 1: Pick a wedge not a world**
 
 <!-- pause -->
 
@@ -307,6 +307,8 @@ Building Projects That Win (cont.)
 4. **Measurable impact** - "Saves 2 hours/week" not "improves productivity"
 5. **90-second narrative** - Can explain + demo in one breath
 6. Briefly address what could be next
+
+> _Disruptive is most interesting!_
 
 # **Anti-patterns to avoid:**
 

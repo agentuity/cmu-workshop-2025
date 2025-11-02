@@ -7,16 +7,16 @@
 import type { AgentContext, AgentRequest, AgentResponse } from '@agentuity/sdk';
 import { anthropic } from '@ai-sdk/anthropic';
 import { groq } from '@ai-sdk/groq';
-import { generateText, generateObject, tool, stepCountIs } from 'ai';
+import { generateObject, generateText, stepCountIs, tool } from 'ai';
 import { z } from 'zod';
 
 // ============================================================================
 // MAIN AGENT HANDLER
-// This is where the agent loop starts - it receives requests that are routed
+// This is where our agent wrapper starts - it receives requests that are routed
 // to the agent (API, webhook, email, etc)
 // ============================================================================
 
-export default async function Agent(
+export default async function AgentHandler(
   req: AgentRequest,
   resp: AgentResponse,
   ctx: AgentContext
