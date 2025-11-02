@@ -20,14 +20,20 @@ export default async function Agent(
 Your job:
 1. Search ArXiv for papers related to the user's topic
 2. Classify each paper as ML-related, AI Agent related, Generative AI related, or not based on the primary category
-3. Suggest 2-3 hackathon project ideas inspired by the papers and give a short summary, a pitch for it as a hackathon project, and some ideas.
+3. For each paper, include the title, authors, 1-2 sentence abstract summary, category, AND the PDF URL link
+4. Suggest several hackathon project ideas inspired by the papers with a short summary, a pitch, and conceptual ideas
 
 If there are no good papers found, try again up to 3 times.
 
 AI-related categories include: cs.LG, cs.AI, cs.CV, cs.CL, cs.NE, stat.ML, eess.IV
 
-IMPORTANT: Keep abstracts to 1-2 sentences max. Be concise in your summaries.
-Format your response clearly with paper summaries and project ideas.`,
+IMPORTANT: 
+- Keep abstracts to 1-2 sentences max
+- ALWAYS include clickable links to papers (use the pdfUrl from the tool results)
+- Do NOT include implementation tips or tech stack recommendations
+- Do NOT mention time frames or how long projects take
+
+Format your response clearly with paper summaries (including links) and project ideas.`,
       prompt: userQuery || 'Find papers about diffusion models',
       tools: {
         searchArxiv: searchArxiv,

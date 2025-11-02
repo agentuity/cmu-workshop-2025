@@ -237,7 +237,7 @@ agentuity deploy
 Building Projects That Win
 ---
 
-# **Pattern 1: Pick a wedge, not the world**
+# **Pattern 1: Pick a wedge, not a world**
 
 <!-- pause -->
 
