@@ -1,8 +1,20 @@
+// ============================================================================
+// ArXiv Paper Scout Agent
+// A research assistant for hackathon participants to discover papers and get
+// project ideas inspired by cutting-edge research.
+// ============================================================================
+
 import type { AgentContext, AgentRequest, AgentResponse } from '@agentuity/sdk';
 import { anthropic } from '@ai-sdk/anthropic';
 import { groq } from '@ai-sdk/groq';
 import { generateText, generateObject, tool, stepCountIs } from 'ai';
 import { z } from 'zod';
+
+// ============================================================================
+// MAIN AGENT HANDLER
+// This is where the agent loop starts - it receives requests that are routed
+// to the agent (API, webhook, email, etc)
+// ============================================================================
 
 export default async function Agent(
   req: AgentRequest,
@@ -10,10 +22,13 @@ export default async function Agent(
   ctx: AgentContext
 ) {
   try {
+    // Get the user's query from the request
     const userQuery = await req.data.text();
 
+    // The core agent loop: LLM + Tools
     const result = await generateText({
       model: anthropic('claude-sonnet-4-5'),
+      // Stop after 3 tool use steps (prevents infinite loops)
       stopWhen: stepCountIs(3),
       system: `You are an ArXiv research paper scout for hackathon students. 
 
@@ -35,6 +50,7 @@ IMPORTANT:
 
 Format your response clearly with paper summaries (including links) and project ideas.`,
       prompt: userQuery || 'Find papers about diffusion models',
+      // TOOLS: Functions the agent can call
       tools: {
         searchArxiv: searchArxiv,
       },
@@ -45,6 +61,7 @@ Format your response clearly with paper summaries (including links) and project 
       result.toolCalls.length
     );
 
+    // Return the final text response
     return resp.text(result.text);
   } catch (error) {
     ctx.logger.error('Error running agent:', error);
@@ -52,8 +69,15 @@ Format your response clearly with paper summaries (including links) and project 
   }
 }
 
+// ============================================================================
+// TOOL: searchArxiv
+// Searches ArXiv API and parses results using a fast LLM (Groq)
+// ============================================================================
+
 const searchArxiv = tool({
+  // Tool description - tells the LLM what this tool does
   description: 'Search ARXIV',
+  // Input schema - defines what parameters the tool accepts (using Zod)
   inputSchema: z.object({
     query: z.string().describe('The query to use to search'),
     maxResults: z
@@ -69,6 +93,7 @@ const searchArxiv = tool({
     const response = await fetch(url);
     const xmlText = await response.text();
 
+    // Define the structure we want to extract from each paper
     const ArxivPaperSchema = z.object({
       title: z.string(),
       authors: z.array(z.string()),
@@ -82,24 +107,25 @@ const searchArxiv = tool({
       papers: z.array(ArxivPaperSchema),
     });
 
+    // Use Groq (fast!) to parse the XML into structured data
     const result = await generateObject({
-      model: groq('openai/gpt-oss-20b'),
+      model: groq('openai/gpt-oss-20b'), // Fast, cheap model for parsing
       schema: ArxivResultsSchema,
       system:
         'You are a fast XML parser. Extract paper information from ArXiv XML response.',
       prompt: `Parse this ArXiv XML and extract all papers:\n\n${xmlText}`,
-      temperature: 0.0,
+      temperature: 0.0, // Deterministic parsing
     });
 
     return result.object.papers;
   },
 });
 
-// ---
+// ============================================================================
+// WELCOME MESSAGE
+// Defines the welcome message and example prompts shown in the Agentuity UI
+// ============================================================================
 
-// ---
-// Welcome message and prompts
-// ---
 export const welcome = () => {
   return {
     welcome:
