@@ -1,5 +1,7 @@
 # Win a Hackathon with AI Agents
 
+#### _Build agents that work and win_
+
 **CMU Scotty Labs NOVA Workshop Materials**
 
 This repository contains everything needed to run the "Win a Hackathon with AI Agents" workshop at CMU, including a live demo agent and presentation slides.

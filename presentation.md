@@ -372,9 +372,9 @@ _Sign up: https://agentuity.com_
 
 Template repo: `https://github.com/agentuity/cmu-workshop-2025`
 
-
 Docs: `https://agentuity.dev`
 
+Kitchen Sink (lots of samples): `https://github.com/agentuity/kitchen-sink-ts`
 
 Discord: `discord.gg/agentuity`
 
